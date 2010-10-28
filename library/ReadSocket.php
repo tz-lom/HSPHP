@@ -113,16 +113,30 @@ class ReadSocket
 	 */
 	protected function encodeString($string)
 	{
-		$encoded = '';
-		$len = strlen($string);
-		for($t=0;$t<$len;$t++)
+		if(is_null($string))
 		{
-			if(ord($string[$t])>0x0f)
-				$encoded.=$string[$t];
-			else
-				$encoded.=self::ESC.chr(ord($string[$t])+self::ESC_SHIFT);
+			return "\0";
 		}
-		return $encoded;
+		else
+		{
+            return strtr($string,
+						 array(	"\x00" => "\x01\x40",
+								"\x01" => "\x01\x41",
+								"\x02" => "\x01\x42",
+								"\x03" => "\x01\x43",
+								"\x04" => "\x01\x44",
+								"\x05" => "\x01\x45",
+								"\x06" => "\x01\x46",
+								"\x07" => "\x01\x47",
+								"\x08" => "\x01\x48",
+								"\x09" => "\x01\x49",
+								"\x0A" => "\x01\x4A",
+								"\x0B" => "\x01\x4B",
+								"\x0C" => "\x01\x4C",
+								"\x0D" => "\x01\x4D",
+								"\x0E" => "\x01\x4E",
+								"\x0F" => "\x01\x4F"));
+        }
 	}
 	
 	/**
@@ -133,16 +147,30 @@ class ReadSocket
 	 */
 	protected function decodeString($encoded)
 	{
-		$string = '';
-		$len = strlen($encoded);
-		for($t=0;$t<$len;$t++)
+		if($encoded === "\0")
 		{
-			if(ord($encoded[$t])!=self::ESC)
-				$string.=$encoded[$t];
-			else
-				$string.=chr(ord($encoded[++$t])-self::ESC_SHIFT);
+            return NULL;
 		}
-		return $string;
+        else
+		{
+            return strtr($encoded,
+						 array(	"\x01\x40" => "\x00",
+								"\x01\x41" => "\x01",
+								"\x01\x42" => "\x02",
+								"\x01\x43" => "\x03",
+								"\x01\x44" => "\x04",
+								"\x01\x45" => "\x05",
+								"\x01\x46" => "\x06",
+								"\x01\x47" => "\x07",
+								"\x01\x48" => "\x08",
+								"\x01\x49" => "\x09",
+								"\x01\x4A" => "\x0A",
+								"\x01\x4B" => "\x0B",
+								"\x01\x4C" => "\x0C",
+								"\x01\x4D" => "\x0D",
+								"\x01\x4E" => "\x0E",
+								"\x01\x4F" => "\x0F"));
+		}
 	}
 	
 	/**
