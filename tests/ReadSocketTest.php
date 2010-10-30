@@ -1,12 +1,20 @@
 <?php
 
-require('../library/IOException.php');
-require('../library/ErrorMessage.php');
-require('../library/ReadSocket.php');
-
+require_once('../library/IOException.php');
+require_once('../library/ErrorMessage.php');
+require_once('../library/ReadSocket.php');
 		
 class ReadSocketTest extends PHPUnit_Framework_TestCase
 {
+	protected $db = 'HSPHP_test';
+	
+	function __construct()
+	{
+		if(file_exists('./my.cfg'))
+		{
+			$this->db = trim(file_get_contents('./my.cfg'));	
+		}
+	}
 	
 	function testConnection()
 	{
@@ -21,19 +29,19 @@ class ReadSocketTest extends PHPUnit_Framework_TestCase
 	{
 		$c = new \HandlerSocket\ReadSocket();
 		$c->connect();
-		$this->assertEquals(1,$c->getIndexId('hstest','hstest_table1','','k,v'));
-		$this->assertEquals(1,$c->getIndexId('hstest','hstest_table1','','k,v'));
+		$this->assertEquals(1,$c->getIndexId($this->db,'read1','','key,date,float,varchar,text,set,union,null'));
+		$this->assertEquals(1,$c->getIndexId($this->db,'read1','','key,date,float,varchar,text,set,union,null'));
 	}
 	
 	function testSelect()
 	{
 		$c = new \HandlerSocket\ReadSocket();
 		$c->connect();
-		$id = $c->getIndexId('hstest','hstest_table1','','k,v');
-		$c->select($id,'=',array(1));
+		$id = $c->getIndexId($this->db,'read1','','key,date,float,varchar,text,set,union,null');
+		$c->select($id,'=',array(42));
 		$response = $c->readResponse();
 		if($response instanceof \HandlerSocket\ErrorMessage) throw $response;
-		$this->assertEquals(array(array(1,'v2')),$response);
+		$this->assertEquals(array(array(42,'2010-10-29','3.14159','variable length',"some\r\nbig\r\ntext",'a,c','b',NULL)),$response);
 	}
 	
 }

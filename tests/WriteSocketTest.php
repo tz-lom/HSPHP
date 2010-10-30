@@ -1,17 +1,26 @@
 <?php
 
-require('../library/IOException.php');
-require('../library/ErrorMessage.php');
-require('../library/ReadSocket.php');
-require('../library/WriteSocket.php');
+require_once('../library/IOException.php');
+require_once('../library/ErrorMessage.php');
+require_once('../library/ReadSocket.php');
+require_once('../library/WriteSocket.php');
 		
 class WriteSocketTest extends PHPUnit_Framework_TestCase
 {
+	protected $db = 'HSPHP_test';
+	
+	function __construct()
+	{
+		if(file_exists('./my.cfg'))
+		{
+			$this->db = trim(file_get_contents('./my.cfg'));	
+		}
+	}
 	function testInsert()
 	{
 		$c = new \HandlerSocket\WriteSocket();
 		$c->connect('localhost',9999);
-		$id = $c->getIndexId('hstest','hstest_table1','','k,v');
+		$id = $c->getIndexId($this->db,'write1','','k,v');
 		$c->select($id,'=',array(100500));
 		$response = $c->readResponse();
 		if($response instanceof \HandlerSocket\ErrorMessage) throw $response;
@@ -23,11 +32,14 @@ class WriteSocketTest extends PHPUnit_Framework_TestCase
 		
 	}
 	
+	/**
+	 * @depends testInsert
+	 */
 	function testDelete()
 	{
 		$c = new \HandlerSocket\WriteSocket();
 		$c->connect('localhost',9999);
-		$id = $c->getIndexId('hstest','hstest_table1','','k,v');
+		$id = $c->getIndexId($this->db,'write1','','k,v');
 		$c->delete($id,'=',array(100500));
 		$response = $c->readResponse();
 		if($response instanceof \HandlerSocket\ErrorMessage) throw $response;

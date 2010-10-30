@@ -1,0 +1,31 @@
+#!/bin/bash
+
+dialog --yesno "Do you want to create database for tests?" 5 50 || exit
+
+result=tempfile
+
+dialog --nocancel --form\
+				"Enter parameters of mysql connection" 12 40 5\
+				"host"		1 1 "localhost"	1 10 20 40\
+				"port"		2 1 "3606"		2 10 20 20\
+				"user"		3 1 "root"		3 10 20 20\
+				"password"	4 1 ""			4 10 20 20\
+				"database"	5 1 HSPHP_test	5 10 20 20\
+		2> $result
+
+
+for name in host port user password database ; do
+  read $name
+done < $result
+
+echo "quit" | mysql --port=$port --host=$host --user=$user --password=$password $database 2>/dev/null ||
+	echo "create database $database" | mysql --port=$port --host=$host --user=$user --password=$password
+
+mysql --port=$port --host=$host --user=$user --password=$password $database <./import.sql
+
+echo $database > ./my.cfg
+
+rm $result;
+
+clear
+echo "Test database successfuly initiated"
