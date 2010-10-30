@@ -31,9 +31,22 @@ class WriteSocketTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals(array(),$response);	//return 1 if OK
 		
 	}
-	
 	/**
 	 * @depends testInsert
+	 */
+	function testUpdate()
+	{
+		$c = new \HandlerSocket\WriteSocket();
+		$c->connect('localhost',9999);
+		$id = $c->getIndexId($this->db,'write1','','k,v');
+		$c->update($id,'=',array(100500),array(100500,42));
+		$response = $c->readResponse();
+		if($response instanceof \HandlerSocket\ErrorMessage) throw $response;
+		$this->assertEquals(array(array(1)),$response);
+	}
+	
+	/**
+	 * @depends testUpdate
 	 */
 	function testDelete()
 	{
