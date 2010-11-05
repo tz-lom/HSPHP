@@ -2,7 +2,7 @@
 
 namespace HandlerSocket;
 
-class Pipeline
+class Pipeline implements ReadCommands,WriteCommands
 {
 	/**
 	 * @var array

@@ -4,7 +4,6 @@ namespace HandlerSocket;
 
 class WriteHandler extends ReadHandler
 {
-	
 	/**
 	 * @param WriteSocket $io
 	 * @param string $db Database name
@@ -13,7 +12,7 @@ class WriteHandler extends ReadHandler
 	 * @param string $index name of table key
 	 * @param array $fields list of interested fields
 	 */
-	public function __construct($io,$db,$table,$keys,$index,$fields)
+	public function __construct(WriteCommands $io,$db,$table,$keys,$index,$fields)
 	{
 		parent::__construct($io,$db,$table,$keys,$index,$fields);
 	}
