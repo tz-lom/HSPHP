@@ -2,7 +2,7 @@
 
 namespace HandlerSocket;
 
-abstract class ReadHandler
+class ReadHandler
 {
 	/**
 	 * @var ReadSocket
@@ -42,7 +42,7 @@ abstract class ReadHandler
 	 * @param string $index name of table key
 	 * @param array $fields list of interested fields
 	 */
-	public function __construct(ReadSocket $io,$db,$table,$keys,$index,$fields)
+	public function __construct($io,$db,$table,$keys,$index,$fields)
 	{
 		$this->db = $db;
 		$this->table = $table;
@@ -53,15 +53,33 @@ abstract class ReadHandler
 		$this->indexId = $this->io->getIndexId($this->db,$this->table,$this->index,$this->fields);
 	}
 	
+	
+	/**
+	 * callback for select request
+	 * @ignore
+	 */
+	public function select_callback($ret)
+	{
+		if($ret instanceof ErrorMessage) return $ret;
+		$result = array();
+		foreach($ret as $row)
+		{
+			$result[] = array_combine($this->fields,$row);
+		}
+		return $result;
+	}
+	
 	/**
 	 * Selects all rows with key relative as described
 	 *
 	 * @param string $compare
 	 * @param array $keys
+	 * @param integer $limit
+	 * @param integer $begin
 	 *
 	 * @return array
 	 */
-	public function select($compare,$keys)
+	public function select($compare,$keys,$limit=1,$begin=0)
 	{
 		$sk = $this->keys;
 		if(is_array($keys))
@@ -77,14 +95,9 @@ abstract class ReadHandler
 		{
 			$sk=array($keys);
 		}
-		$this->io->select($this->indexId,$compare,$sk);
-		$ret = $this->io->readResponse();
+		$this->io->select($this->indexId,$compare,$sk,$limit,$begin);
+		$ret = $this->io->registerCallback(array($this,'select_callback'));
 		if($ret instanceof ErrorMessage) throw $ret;
-		$result = array();
-		foreach($ret as $row)
-		{
-			$result[] = array_combine($this->fields,$row);
-		}
-		return $result;
+		return $ret;
 	}
 }

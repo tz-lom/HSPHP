@@ -13,21 +13,32 @@ class WriteHandler extends ReadHandler
 	 * @param string $index name of table key
 	 * @param array $fields list of interested fields
 	 */
-	public function __construct(WriteSocket $io,$db,$table,$keys,$index,$fields)
+	public function __construct($io,$db,$table,$keys,$index,$fields)
 	{
 		parent::__construct($io,$db,$table,$keys,$index,$fields);
 	}
 	
+	/**
+	 * callback for update request
+	 * @ignore
+	 */
+	public function update_callback($ret)
+	{
+		if($ret instanceof ErrorMessage) return $ret;
+		return $ret[0][0];
+	}
 	/**
 	 * Modify rows altering their values
 	 *
 	 * @param string $compare
 	 * @param array $keys
 	 * @param array $values
+	 * @param integer $limit
+	 * @param integer $begin
 	 *
 	 * @return integer How many rows affected
 	 */
-	public function update($compare,$keys,$values)
+	public function update($compare,$keys,$values,$limit=1,$begin=0)
 	{
 		$sk = $this->keys;
 		if(is_array($keys))
@@ -52,9 +63,19 @@ class WriteHandler extends ReadHandler
 			$value = $values[$value];
 		}
 		array_slice($sv,0,count($values));
-		$this->io->update($this->indexId,$compare,$sk,$sv);
-		$ret = $this->io->readResponse();
+		$this->io->update($this->indexId,$compare,$sk,$sv,$limit,$begin);
+		$ret =$this->io->registerCallback(array($this,'update_callback'));
 		if($ret instanceof ErrorMessage) throw $ret;
+		return $ret;
+	}
+	
+	/**
+	 * callback for delete request
+	 * @ignore
+	 */
+	public function delete_callback($ret)
+	{
+		if($ret instanceof ErrorMessage) return $ret;
 		return $ret[0][0];
 	}
 	
@@ -63,24 +84,43 @@ class WriteHandler extends ReadHandler
 	 *
 	 * @param string $compare
 	 * @param array $keys
-	 *
+	 * @param integer $limit
+	 * @param integer $begin
+	 * 
 	 * @return integer How many rows affected
 	 */
-	public function delete($compare,$keys)
+	public function delete($compare,$keys,$limit=1,$begin=0)
 	{
 		$sk = $this->keys;
-		foreach($sk as &$value)
+		if(is_array($keys))
 		{
-			if(!isset($keys[$value])) break;
-			$value = $keys[$value];
+			foreach($sk as &$value)
+			{
+				if(!isset($keys[$value])) break;
+				$value = $keys[$value];
+			}
+			array_slice($sk,0,count($keys));
 		}
-		array_slice($sk,0,count($keys));
-		$this->io->delete($this->indexId,$compare,$sk);
-		$ret = $this->io->readResponse();
+		else
+		{
+			$sk=array($keys);
+		}
+		$this->io->delete($this->indexId,$compare,$sk,$limit,$begin);
+		$ret =$this->io->registerCallback(array($this,'delete_callback'));
 		if($ret instanceof ErrorMessage) throw $ret;
-		return $ret[0][0];
+		return $ret;
 	}
 	
+	
+	/**
+	 * callback for insert request
+	 * @ignore
+	 */
+	public function insert_callback($ret)
+	{
+		if($ret instanceof ErrorMessage and $ret->getMessage()!='') return $ret;
+		return !($ret instanceof ErrorMessage);
+	}
 	/**
 	 * Insert row into table
 	 *
@@ -97,8 +137,8 @@ class WriteHandler extends ReadHandler
 		}
 		array_slice($sv,0,count($values));
 		$this->io->insert($this->indexId,$sv);
-		$ret = $this->io->readResponse();
-		if($ret instanceof ErrorMessage and $ret->getMessage()!='') throw $ret;
-		return !($ret instanceof ErrorMessage);
+		$ret =$this->io->registerCallback(array($this,'insert_callback'));
+		if($ret instanceof ErrorMessage) throw $ret;
+		return $ret;
 	}
 }
