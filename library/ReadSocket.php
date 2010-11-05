@@ -186,7 +186,7 @@ class ReadSocket
 		if($vals[0]!=0)
 		{
 			//error occured
-			return new \HandlerSocket\ErrorMessage($vals[2],$vals[0]);
+			return new \HandlerSocket\ErrorMessage(isset($vals[2])?$vals[2]:'',$vals[0]);
 		}
 		else
 		{
@@ -278,14 +278,25 @@ class ReadSocket
 		{
 			$query.=self::SEP.$this->encodeString((string)$key);
 		}
-		if($limit>1)
+		if($begin>0)
+			$query.=self::SEP.($begin+$limit).self::SEP.$begin;
+		else
 		{
-			if($begin>0)
-				$query.=self::SEP.$limit.self::SEP.$begin;
-			else
+			if($limit>1)
 				$query.=self::SEP.$limit;
 		}
 		$this->sendStr($query.self::EOL);
+	}
+	
+	/**
+	 * Register callback that must process response from server
+	 *   very useful for cache/pipeline system
+	 *
+	 * @param callback $callback
+	 */
+	public function registerCallback($callback)
+	{
+		return call_user_func($callback,$this->readResponse());
 	}
 	
 }

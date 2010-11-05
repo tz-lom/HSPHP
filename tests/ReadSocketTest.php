@@ -44,4 +44,36 @@ class ReadSocketTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals(array(array(42,'2010-10-29','3.14159','variable length',"some\r\nbig\r\ntext",'a,c','b',NULL)),$response);
 	}
 	
+	function testSelectRange()
+	{
+		$c = new \HandlerSocket\ReadSocket();
+		$c->connect();
+		$id = $c->getIndexId($this->db,'read1','','key');
+		$c->select($id,'<=',array(4),3);
+		$response = $c->readResponse();
+		
+		$this->assertEquals(array(array(4),array(3),array(2)),$response);
+	}
+	
+	function testSelectMoved()
+	{
+		$c = new \HandlerSocket\ReadSocket();
+		$c->connect();
+		$id = $c->getIndexId($this->db,'read1','','key');
+		$c->select($id,'<=',array(4),1,3);
+		$response = $c->readResponse();
+		
+		$this->assertEquals(array(array(1)),$response);
+	}
+	
+	function testSelectMovedRange()
+	{
+		$c = new \HandlerSocket\ReadSocket();
+		$c->connect();
+		$id = $c->getIndexId($this->db,'read1','','key');
+		$c->select($id,'<=',array(4),2,1);
+		$response = $c->readResponse();
+		$this->assertEquals(array(array(3),array(2)),$response);
+	}
+	
 }
