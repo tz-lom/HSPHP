@@ -2,6 +2,8 @@
 
 require_once('../library/IOException.php');
 require_once('../library/ErrorMessage.php');
+require_once('../library/ReadCommands.php');
+require_once('../library/WriteCommands.php');
 require_once('../library/ReadSocket.php');
 require_once('../library/WriteSocket.php');
 		
