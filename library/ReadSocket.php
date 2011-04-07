@@ -196,7 +196,7 @@ class ReadSocket implements ReadCommands
 			next($vals);
 			$group = array();
 			$readed = $numcols;
-			while($item = next($vals))
+			while(($item = next($vals))!==false)
 			{
 				$group[] = $this->decodeString($item);
 				if(--$readed==0)
