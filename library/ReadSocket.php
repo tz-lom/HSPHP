@@ -279,7 +279,7 @@ class ReadSocket implements ReadCommands
 			$query.=self::SEP.$this->encodeString((string)$key);
 		}
 		if($begin>0)
-			$query.=self::SEP.($begin+$limit).self::SEP.$begin;
+			$query.=self::SEP.$limit.self::SEP.$begin;
 		else
 		{
 			if($limit>1)
