@@ -77,4 +77,16 @@ class ReadSocketTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals(array(array(3),array(2)),$response);
 	}
 	
+	/**
+	 * @bug 1
+	 */
+	function testSelectWithZeroValue()
+	{
+		$c = new \HandlerSocket\ReadSocket();
+		$c->connect();
+		$id = $c->getIndexId($this->db,'read1','','float');
+		$c->select($id,'=',array(100));
+		$response = $c->readResponse();
+		$this->assertEquals(array(array(0)),$response);
+	}
 }
