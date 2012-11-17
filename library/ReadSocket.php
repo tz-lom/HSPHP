@@ -9,6 +9,38 @@ class ReadSocket implements ReadCommands
 	const NULL = "\0";
 	const ESC = "\1";
 	const ESC_SHIFT = 0x40;
+	private static $decodeMap = array(	"\x01\x40" => "\x00",
+										"\x01\x41" => "\x01",
+										"\x01\x42" => "\x02",
+										"\x01\x43" => "\x03",
+										"\x01\x44" => "\x04",
+										"\x01\x45" => "\x05",
+										"\x01\x46" => "\x06",
+										"\x01\x47" => "\x07",
+										"\x01\x48" => "\x08",
+										"\x01\x49" => "\x09",
+										"\x01\x4A" => "\x0A",
+										"\x01\x4B" => "\x0B",
+										"\x01\x4C" => "\x0C",
+										"\x01\x4D" => "\x0D",
+										"\x01\x4E" => "\x0E",
+										"\x01\x4F" => "\x0F");
+	private static $encodeMap = array(	"\x00" => "\x01\x40",
+										"\x01" => "\x01\x41",
+										"\x02" => "\x01\x42",
+										"\x03" => "\x01\x43",
+										"\x04" => "\x01\x44",
+										"\x05" => "\x01\x45",
+										"\x06" => "\x01\x46",
+										"\x07" => "\x01\x47",
+										"\x08" => "\x01\x48",
+										"\x09" => "\x01\x49",
+										"\x0A" => "\x01\x4A",
+										"\x0B" => "\x01\x4B",
+										"\x0C" => "\x01\x4C",
+										"\x0D" => "\x01\x4D",
+										"\x0E" => "\x01\x4E",
+										"\x0F" => "\x01\x4F");
 	
 	protected $socket = NULL;
 	/**
@@ -113,29 +145,14 @@ class ReadSocket implements ReadCommands
 	 */
 	protected function encodeString($string)
 	{
+
 		if(is_null($string))
 		{
 			return "\0";
 		}
 		else
 		{
-            return strtr($string,
-						 array(	"\x00" => "\x01\x40",
-								"\x01" => "\x01\x41",
-								"\x02" => "\x01\x42",
-								"\x03" => "\x01\x43",
-								"\x04" => "\x01\x44",
-								"\x05" => "\x01\x45",
-								"\x06" => "\x01\x46",
-								"\x07" => "\x01\x47",
-								"\x08" => "\x01\x48",
-								"\x09" => "\x01\x49",
-								"\x0A" => "\x01\x4A",
-								"\x0B" => "\x01\x4B",
-								"\x0C" => "\x01\x4C",
-								"\x0D" => "\x01\x4D",
-								"\x0E" => "\x01\x4E",
-								"\x0F" => "\x01\x4F"));
+            return strtr($string, self::$encodeMap);
         }
 	}
 	
@@ -147,29 +164,14 @@ class ReadSocket implements ReadCommands
 	 */
 	protected function decodeString($encoded)
 	{
+
 		if($encoded === "\0")
 		{
             return NULL;
 		}
         else
 		{
-            return strtr($encoded,
-						 array(	"\x01\x40" => "\x00",
-								"\x01\x41" => "\x01",
-								"\x01\x42" => "\x02",
-								"\x01\x43" => "\x03",
-								"\x01\x44" => "\x04",
-								"\x01\x45" => "\x05",
-								"\x01\x46" => "\x06",
-								"\x01\x47" => "\x07",
-								"\x01\x48" => "\x08",
-								"\x01\x49" => "\x09",
-								"\x01\x4A" => "\x0A",
-								"\x01\x4B" => "\x0B",
-								"\x01\x4C" => "\x0C",
-								"\x01\x4D" => "\x0D",
-								"\x01\x4E" => "\x0E",
-								"\x01\x4F" => "\x0F"));
+            return strtr($encoded, self::$decodeMap);
 		}
 	}
 	
