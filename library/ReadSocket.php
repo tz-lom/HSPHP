@@ -157,25 +157,6 @@ class ReadSocket implements ReadCommands
 	}
 	
 	/**
-	 * Decode string from server
-	 *
-	 * @param string $encoded
-	 * @return string
-	 */
-	protected function decodeString($encoded)
-	{
-
-		if($encoded === "\0")
-		{
-            return NULL;
-		}
-        else
-		{
-            return strtr($encoded, self::$decodeMap);
-		}
-	}
-	
-	/**
 	 * Read response from server
 	 *
 	 * @return \HandlerSocket\ErrorMessage
@@ -183,7 +164,7 @@ class ReadSocket implements ReadCommands
 	 */
 	public function readResponse()
 	{
-		$response = $this->recvStr();
+		$response = strtr($this->recvStr(), self::$decodeMap);
 		$vals = explode(self::SEP,$response);
 		if($vals[0]!=0)
 		{
@@ -200,7 +181,7 @@ class ReadSocket implements ReadCommands
 			$readed = $numcols;
 			while(($item = next($vals))!==false)
 			{
-				$group[] = $this->decodeString($item);
+				$group[] = $item === "\0" ? NULL : $item;
 				if(--$readed==0)
 				{
 					$result[] = $group;
