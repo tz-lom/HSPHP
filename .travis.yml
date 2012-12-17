@@ -1,0 +1,23 @@
+language: php
+
+php:
+  - 5.3
+  - 5.4
+env:
+  - DB=mysql
+
+before_script:
+  # install mysql 5.5 with handler-socket
+  - sudo apt-get update
+  - sudo apt-get install handlersocket -y
+
+  - mysql -e 'create database IF NOT EXISTS handler_socket_tests;'
+  - mysql -e "show plugins;"
+  - mysql -e "install plugin handlersocket soname 'handlersocket.so';"
+  - sleep 5
+  - sudo /etc/init.d/mysql restart
+
+  - mysql -e "show processlist;"
+  - git submodule update --init
+
+script: phpunit -C
