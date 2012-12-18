@@ -7,17 +7,9 @@ env:
   - DB=mysql
 
 before_script:
-  # install mysql 5.5 with handler-socket
-  - sudo apt-get update
-  - sudo apt-get install handlersocket -y
-
-  - mysql -e 'create database IF NOT EXISTS handler_socket_tests;'
-  - mysql -e "show plugins;"
-  - mysql -e "install plugin handlersocket soname 'handlersocket.so';"
-  - sleep 5
-  - sudo /etc/init.d/mysql restart
-
+  - ./travis/install_hs.sh
   - mysql -e "show processlist;"
-  - git submodule update --init
+  - mysql -e 'create database IF NOT EXISTS HSPHP_test;'
+  - mysql -D HSPHP_test < tests/import.sql
 
-script: phpunit -C
+script: cd tests && phpunit .
