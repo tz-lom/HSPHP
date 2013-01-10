@@ -1,0 +1,15 @@
+language: php
+
+php:
+  - 5.3
+  - 5.4
+env:
+  - DB=mysql
+
+before_script:
+  - ./travis/install_hs.sh
+  - mysql -e "show processlist;"
+  - mysql -e 'create database IF NOT EXISTS HSPHP_test;'
+  - mysql -D HSPHP_test < tests/HS_php_test.sql
+
+script: cd tests && phpunit .
