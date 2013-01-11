@@ -1,22 +1,13 @@
 <?php
 
-require_once('../library/IOException.php');
-require_once('../library/ErrorMessage.php');
-require_once('../library/ReadCommands.php');
-require_once('../library/WriteCommands.php');
-require_once('../library/ReadSocket.php');
-require_once('../library/ReadHandler.php');
-require_once('../library/WriteSocket.php');
-require_once('../library/WriteHandler.php');
-
 class HSWriteTest extends \HandlerSocket\WriteHandler
 {
 	function __construct($io)
 	{
 		$db = 'HSPHP_test';
-		if(file_exists('./my.cfg'))
+		if(file_exists(__DIR__.'/my.cfg'))
 		{
-			$db = trim(file_get_contents('./my.cfg'));	
+			$db = trim(file_get_contents(__DIR__.'/my.cfg'));	
 		}
 		parent::__construct($io,$db,'write1',array('k'),'',array('k','v'));
 	}
@@ -38,7 +29,7 @@ class WriteHandlerTest extends PHPUnit_Framework_TestCase
 	}
 	
 	/**
-	 * @d epends testInsert
+	 * @depends testInsert
 	 */
 	function testUpdate()
 	{

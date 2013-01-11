@@ -1,21 +1,14 @@
 <?php
 
-require_once('../library/IOException.php');
-require_once('../library/ErrorMessage.php');
-require_once('../library/ReadCommands.php');
-require_once('../library/WriteCommands.php');
-require_once('../library/ReadSocket.php');
-require_once('../library/WriteSocket.php');
-		
 class WriteSocketTest extends PHPUnit_Framework_TestCase
 {
 	protected $db = 'HSPHP_test';
 	
 	function __construct()
 	{
-		if(file_exists('./my.cfg'))
+		if(file_exists(__DIR__.'/my.cfg'))
 		{
-			$this->db = trim(file_get_contents('./my.cfg'));	
+			$this->db = trim(file_get_contents(__DIR__.'/my.cfg'));	
 		}
 	}
 	function testInsert()

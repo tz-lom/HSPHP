@@ -10,6 +10,7 @@ before_script:
   - ./travis/install_hs.sh
   - mysql -e "show processlist;"
   - mysql -e 'create database IF NOT EXISTS HSPHP_test;'
-  - mysql -D HSPHP_test < tests/import.sql
+  - mysql -D HSPHP_test < tests/HSPHP/import.sql
+  - composer install
 
-script: cd tests && phpunit .
+script: phpunit

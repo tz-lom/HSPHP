@@ -1,19 +1,13 @@
 <?php
 
-require_once('../library/IOException.php');
-require_once('../library/ErrorMessage.php');
-require_once('../library/ReadCommands.php');
-require_once('../library/ReadSocket.php');
-require_once('../library/ReadHandler.php');
-
 class HSReadTest extends \HandlerSocket\ReadHandler
 {
 	function __construct($io)
 	{
 		$db = 'HSPHP_test';
-		if(file_exists('./my.cfg'))
+		if(file_exists(__DIR__.'/my.cfg'))
 		{
-			$db = trim(file_get_contents('./my.cfg'));	
+			$db = trim(file_get_contents(__DIR__.'/my.cfg'));	
 		}
 		parent::__construct($io,$db,'read1',array('key'),'',array('key','date','float','varchar','text','set','union','null'));
 	}
