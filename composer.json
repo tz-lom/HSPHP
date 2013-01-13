@@ -15,8 +15,8 @@
         "source": "http://github.com/tz-lom/HSPHP"
     },
     "autoload": {
-        "psr-0": {
-            "HandlerSocket": "src/"
+        "psr-0" : {
+            "" : "src/"
         }
     }
 }
