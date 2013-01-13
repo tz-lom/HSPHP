@@ -1,6 +1,6 @@
 <?php
 
-class HSPipelineTest extends \HandlerSocket\WriteHandler
+class HSPipelineTest extends \HSPHP\WriteHandler
 {
 	function __construct($io)
 	{
@@ -27,12 +27,12 @@ class PipelineTest extends PHPUnit_Framework_TestCase
 	
 	function testMultipleSelect()
 	{
-		$io = new \HandlerSocket\ReadSocket();
+		$io = new \HSPHP\ReadSocket();
 		$io->connect();
 		
-		$pipe = new \HandlerSocket\Pipeline($io);
+		$pipe = new \HSPHP\Pipeline($io);
 		
-		$accessor = new \HandlerSocket\ReadHandler($pipe,$this->db,'read1',array('key'),'',array('float'));
+		$accessor = new \HSPHP\ReadHandler($pipe,$this->db,'read1',array('key'),'',array('float'));
 		
 		$accessor->select('=',42);
 		$accessor->select('=',12);
@@ -42,12 +42,12 @@ class PipelineTest extends PHPUnit_Framework_TestCase
 	
 	function testBigChain()
 	{
-		$io = new \HandlerSocket\WriteSocket();
+		$io = new \HSPHP\WriteSocket();
 		$io->connect();
 		
-		$pipe = new \HandlerSocket\Pipeline($io);
+		$pipe = new \HSPHP\Pipeline($io);
 		
-		$accessor = new \HandlerSocket\WriteHandler($pipe,$this->db,'write1',array('k'),'',array('k','v'));
+		$accessor = new \HSPHP\WriteHandler($pipe,$this->db,'write1',array('k'),'',array('k','v'));
 		
 		$accessor->select('=',12);
 		$accessor->insert(array('k'=>12,'v'=>'v12'));

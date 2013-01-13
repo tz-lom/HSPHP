@@ -1,6 +1,22 @@
 <?php
 
-namespace HandlerSocket;
+/*
+ * This file is part of HSPHP.
+ *
+ * (c) Nuzhdin Urii
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+namespace HSPHP;
+
+/**
+ * Class for read commands
+ *
+ * @package HSPHP
+ * @author  Nuzhdin Urii <nuzhdin.urii@gmail.com>
+ */
 
 class ReadHandler
 {
@@ -41,11 +57,11 @@ class ReadHandler
 
     /**
      * @param ReadCommandsInterface $io
-     * @param string                $db Database name
-     * @param string                $table Table name
-     * @param array                 $keys list of keys
-     * @param string                $index name of table key
-     * @param array                 $fields list of interested fields
+     * @param string                $db     Database name
+     * @param string                $table  Table name
+     * @param array                 $keys   List of keys
+     * @param string                $index  Name of table key
+     * @param array                 $fields List of interested fields
      */
     public function __construct(ReadCommandsInterface $io, $db, $table, $keys, $index, $fields)
     {

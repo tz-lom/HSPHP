@@ -1,6 +1,6 @@
 <?php
 
-class HSWriteTest extends \HandlerSocket\WriteHandler
+class HSWriteTest extends \HSPHP\WriteHandler
 {
 	function __construct($io)
 	{
@@ -17,7 +17,7 @@ class WriteHandlerTest extends PHPUnit_Framework_TestCase
 {
 	function testInsert()
 	{
-		$io = new \HandlerSocket\WriteSocket();
+		$io = new \HSPHP\WriteSocket();
 		$io->connect();
 		$t = new HSWriteTest($io);
 		
@@ -33,7 +33,7 @@ class WriteHandlerTest extends PHPUnit_Framework_TestCase
 	 */
 	function testUpdate()
 	{
-		$io = new \HandlerSocket\WriteSocket();
+		$io = new \HSPHP\WriteSocket();
 		$io->connect();
 		$t = new HSWriteTest($io);
 		
@@ -47,7 +47,7 @@ class WriteHandlerTest extends PHPUnit_Framework_TestCase
 	 */
 	function testDelete()
 	{
-		$io = new \HandlerSocket\WriteSocket();
+		$io = new \HSPHP\WriteSocket();
 		$io->connect();
 		$t = new HSWriteTest($io);
 		

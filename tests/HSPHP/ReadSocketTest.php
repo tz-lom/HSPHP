@@ -14,7 +14,7 @@ class ReadSocketTest extends PHPUnit_Framework_TestCase
 	
 	function testConnection()
 	{
-		$c = new \HandlerSocket\ReadSocket();
+		$c = new \HSPHP\ReadSocket();
 		$c->connect();
 		$this->assertEquals(true,$c->isConnected());
 		$c->disconnect();
@@ -23,7 +23,7 @@ class ReadSocketTest extends PHPUnit_Framework_TestCase
 	
 	function testIndex()
 	{
-		$c = new \HandlerSocket\ReadSocket();
+		$c = new \HSPHP\ReadSocket();
 		$c->connect();
 		$this->assertEquals(1,$c->getIndexId($this->db,'read1','','key,date,float,varchar,text,set,union,null'));
 		$this->assertEquals(1,$c->getIndexId($this->db,'read1','','key,date,float,varchar,text,set,union,null'));
@@ -31,18 +31,18 @@ class ReadSocketTest extends PHPUnit_Framework_TestCase
 	
 	function testSelect()
 	{
-		$c = new \HandlerSocket\ReadSocket();
+		$c = new \HSPHP\ReadSocket();
 		$c->connect();
 		$id = $c->getIndexId($this->db,'read1','','key,date,float,varchar,text,set,union,null');
 		$c->select($id,'=',array(42));
 		$response = $c->readResponse();
-		if($response instanceof \HandlerSocket\ErrorMessage) throw $response;
+		if($response instanceof \HSPHP\ErrorMessage) throw $response;
 		$this->assertEquals(array(array(42,'2010-10-29','3.14159','variable length',"some\r\nbig\r\ntext",'a,c','b',NULL)),$response);
 	}
 	
 	function testSelectRange()
 	{
-		$c = new \HandlerSocket\ReadSocket();
+		$c = new \HSPHP\ReadSocket();
 		$c->connect();
 		$id = $c->getIndexId($this->db,'read1','','key');
 		$c->select($id,'<=',array(4),3);
@@ -53,7 +53,7 @@ class ReadSocketTest extends PHPUnit_Framework_TestCase
 	
 	function testSelectMoved()
 	{
-		$c = new \HandlerSocket\ReadSocket();
+		$c = new \HSPHP\ReadSocket();
 		$c->connect();
 		$id = $c->getIndexId($this->db,'read1','','key');
 		$c->select($id,'<=',array(4),1,3);
@@ -64,7 +64,7 @@ class ReadSocketTest extends PHPUnit_Framework_TestCase
 	
 	function testSelectMovedRange()
 	{
-		$c = new \HandlerSocket\ReadSocket();
+		$c = new \HSPHP\ReadSocket();
 		$c->connect();
 		$id = $c->getIndexId($this->db,'read1','','key');
 		$c->select($id,'<=',array(4),2,1);
@@ -77,7 +77,7 @@ class ReadSocketTest extends PHPUnit_Framework_TestCase
 	 */
 	function testSelectWithZeroValue()
 	{
-		$c = new \HandlerSocket\ReadSocket();
+		$c = new \HSPHP\ReadSocket();
 		$c->connect();
 		$id = $c->getIndexId($this->db,'read1','','float');
 		$c->select($id,'=',array(100));
