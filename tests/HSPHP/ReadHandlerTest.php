@@ -1,6 +1,6 @@
 <?php
 
-class HSReadTest extends \HandlerSocket\ReadHandler
+class HSReadTest extends \HSPHP\ReadHandler
 {
 	function __construct($io)
 	{
@@ -17,7 +17,7 @@ class ReadHandlerTest extends PHPUnit_Framework_TestCase
 {
 	function testSelect()
 	{
-		$io = new \HandlerSocket\ReadSocket();
+		$io = new \HSPHP\ReadSocket();
 		$io->connect();
 		$t = new HSReadTest($io);
 		$this->assertEquals(array(array('key'		=> 42,
