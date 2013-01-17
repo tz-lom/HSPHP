@@ -45,24 +45,7 @@ class ReadSocket implements ReadCommandsInterface
         "\x01\x4F" => "\x0F"
     );
 
-    private static $encodeMap = array(
-        "\x00" => "\x01\x40",
-        "\x01" => "\x01\x41",
-        "\x02" => "\x01\x42",
-        "\x03" => "\x01\x43",
-        "\x04" => "\x01\x44",
-        "\x05" => "\x01\x45",
-        "\x06" => "\x01\x46",
-        "\x07" => "\x01\x47",
-        "\x08" => "\x01\x48",
-        "\x09" => "\x01\x49",
-        "\x0A" => "\x01\x4A",
-        "\x0B" => "\x01\x4B",
-        "\x0C" => "\x01\x4C",
-        "\x0D" => "\x01\x4D",
-        "\x0E" => "\x01\x4E",
-        "\x0F" => "\x01\x4F"
-    );
+    private static $encodeMap = null;
 
     protected $socket = NULL;
 
@@ -177,7 +160,7 @@ class ReadSocket implements ReadCommandsInterface
         if (is_null($string)) {
             return self::NULL;
         } else {
-            return strtr($string, self::$encodeMap);
+            return strtr($string, self::getEncodeMap());
         }
     }
 
@@ -192,7 +175,7 @@ class ReadSocket implements ReadCommandsInterface
         if ($encoded === self::NULL) {
             return NULL;
         } else {
-            return strtr($encoded, self::$decodeMap);
+            return strtr($encoded, self::getDecodeMap());
         }
     }
 
@@ -209,20 +192,10 @@ class ReadSocket implements ReadCommandsInterface
             //error occured
             return new ErrorMessage(isset($vals[2]) ? $vals[2] : '', $vals[0]);
         } else {
-            $numCols = intval($vals[1]);
-            $result = array();
-            reset($vals);
-            next($vals);
-            $group = array();
-            $readed = $numCols;
-            while (($item = next($vals)) !== false) {
-                $group[] = $this->decodeString($item);
-                if (--$readed == 0) {
-                    $result[] = $group;
-                    $group = array();
-                    $readed = $numCols;
-                }
-            }
+            $errorCode = array_shift($vals);
+            $numCols = intval(array_shift($vals));
+            $vals = array_map(array($this, 'decodeString'), $vals);
+            $result = array_chunk($vals, $numCols);
 
             return $result;
         }
@@ -304,4 +277,23 @@ class ReadSocket implements ReadCommandsInterface
         return call_user_func($callback, $this->readResponse());
     }
 
+    /**
+     * @return array
+     */
+    static public function getDecodeMap()
+    {
+        return self::$decodeMap;
+    }
+
+    /**
+     * @return array
+     */
+    static public function getEncodeMap()
+    {
+        if (self::$encodeMap === null) {
+            self::$encodeMap = array_flip(self::getDecodeMap());
+        }
+
+        return self::$encodeMap;
+    }
 }
