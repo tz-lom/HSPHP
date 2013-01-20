@@ -119,7 +119,7 @@ class ReadSocket implements ReadCommandsInterface
     }
 
     /**
-     * Receive one string from server,string havn't trailing \n
+     * Receive one string from server,string haven't trailing \n
      *
      * @param Boolean $read Specifies socket
      *
@@ -209,20 +209,10 @@ class ReadSocket implements ReadCommandsInterface
             //error occured
             return new ErrorMessage(isset($vals[2]) ? $vals[2] : '', $vals[0]);
         } else {
-            $numCols = intval($vals[1]);
-            $result = array();
-            reset($vals);
-            next($vals);
-            $group = array();
-            $readed = $numCols;
-            while (($item = next($vals)) !== false) {
-                $group[] = $this->decodeString($item);
-                if (--$readed == 0) {
-                    $result[] = $group;
-                    $group = array();
-                    $readed = $numCols;
-                }
-            }
+            array_shift($vals); // skip error code
+            $numCols = intval(array_shift($vals));
+            $vals = array_map(array($this, 'decodeString'), $vals);
+            $result = array_chunk($vals, $numCols);
 
             return $result;
         }

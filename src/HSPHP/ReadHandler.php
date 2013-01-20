@@ -109,7 +109,9 @@ class ReadHandler
         $sk = $this->keys;
         if (is_array($keys)) {
             foreach ($sk as &$value) {
-                if (!isset($keys[$value])) break;
+                if (!isset($keys[$value])) {
+                  break;
+                }
                 $value = $keys[$value];
             }
             array_slice($sk, 0, count($keys));
