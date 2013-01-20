@@ -4,15 +4,15 @@ class ReadSocketTest extends PHPUnit_Framework_TestCase
 {
 	protected $db = 'HSPHP_test';
 	
-	function __construct()
+	public function __construct()
 	{
 		if(file_exists(__DIR__.'/my.cfg'))
 		{
 			$this->db = trim(file_get_contents(__DIR__.'/my.cfg'));	
 		}
 	}
-	
-	function testConnection()
+
+    public function testConnection()
 	{
 		$c = new \HSPHP\ReadSocket();
 		$c->connect();
@@ -20,27 +20,26 @@ class ReadSocketTest extends PHPUnit_Framework_TestCase
 		$c->disconnect();
 		$this->assertEquals(false,$c->isConnected());
 	}
-	
-	function testIndex()
+
+    public function testIndex()
 	{
 		$c = new \HSPHP\ReadSocket();
 		$c->connect();
 		$this->assertEquals(1,$c->getIndexId($this->db,'read1','','key,date,float,varchar,text,set,union,null'));
 		$this->assertEquals(1,$c->getIndexId($this->db,'read1','','key,date,float,varchar,text,set,union,null'));
 	}
-	
-	function testSelect()
+
+    public function testSelect()
 	{
 		$c = new \HSPHP\ReadSocket();
 		$c->connect();
 		$id = $c->getIndexId($this->db,'read1','','key,date,float,varchar,text,set,union,null');
 		$c->select($id,'=',array(42));
 		$response = $c->readResponse();
-		if($response instanceof \HSPHP\ErrorMessage) throw $response;
 		$this->assertEquals(array(array(42,'2010-10-29','3.14159','variable length',"some\r\nbig\r\ntext",'a,c','b',NULL)),$response);
 	}
-	
-	function testSelectRange()
+
+    public function testSelectRange()
 	{
 		$c = new \HSPHP\ReadSocket();
 		$c->connect();
@@ -50,8 +49,8 @@ class ReadSocketTest extends PHPUnit_Framework_TestCase
 		
 		$this->assertEquals(array(array(4),array(3),array(2)),$response);
 	}
-	
-	function testSelectMoved()
+
+    public function testSelectMoved()
 	{
 		$c = new \HSPHP\ReadSocket();
 		$c->connect();
@@ -61,8 +60,8 @@ class ReadSocketTest extends PHPUnit_Framework_TestCase
 		
 		$this->assertEquals(array(array(1)),$response);
 	}
-	
-	function testSelectMovedRange()
+
+    public function testSelectMovedRange()
 	{
 		$c = new \HSPHP\ReadSocket();
 		$c->connect();
@@ -75,7 +74,7 @@ class ReadSocketTest extends PHPUnit_Framework_TestCase
 	/**
 	 * @bug 1
 	 */
-	function testSelectWithZeroValue()
+    public function testSelectWithZeroValue()
 	{
 		$c = new \HSPHP\ReadSocket();
 		$c->connect();
@@ -84,4 +83,14 @@ class ReadSocketTest extends PHPUnit_Framework_TestCase
 		$response = $c->readResponse();
 		$this->assertEquals(array(array(0)),$response);
 	}
+
+    public function testSelectWithSpecialChars()
+    {
+        $c = new \HSPHP\ReadSocket();
+        $c->connect();
+        $id = $c->getIndexId($this->db, 'read1', '', 'text');
+        $c->select($id, '=', array(10001));
+        $response = $c->readResponse();
+        $this->assertEquals(array(array("\x00\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0A\x0B\x0C\x0D\x0E\x0F")), $response);
+    }
 }

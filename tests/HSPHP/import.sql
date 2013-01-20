@@ -1,19 +1,4 @@
--- phpMyAdmin SQL Dump
--- version 3.2.0.1
--- http://www.phpmyadmin.net
---
--- Хост: localhost
--- Время создания: Ноя 05 2010 г., 13:49
--- Версия сервера: 5.1.51
--- Версия PHP: 5.3.3-pl1-gentoo
-
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
-
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
 
 --
 -- База данных: `HSPHP_test`
@@ -49,7 +34,8 @@ INSERT INTO `read1` (`key`, `date`, `float`, `varchar`, `text`, `set`, `union`, 
 (2, '0000-00-00', 2, '', '', '', '', NULL),
 (3, '0000-00-00', 3, '', '', '', '', NULL),
 (4, '0000-00-00', 4, '', '', '', '', NULL),
-(100, '0000-00-00', 0, '', '', '', '', NULL);
+(100, '0000-00-00', 0, '', '', '', '', NULL),
+(10001, '2012-01-20', 1 , 'text with special chars', CONCAT(CHAR(0),CHAR(1),CHAR(2),CHAR(3),CHAR(4),CHAR(5),CHAR(6),CHAR(7),CHAR(8),CHAR(9),CHAR(10),CHAR(11),CHAR(12),CHAR(13),CHAR(14),CHAR(15)), '', '', NULL);
 
 -- --------------------------------------------------------
 
