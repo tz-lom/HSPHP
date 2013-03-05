@@ -1,6 +1,6 @@
 sudo apt-get update
 sudo apt-get install mysql-source-5.5
-git clone https://github.com/DeNADev/HandlerSocket-Plugin-for-MySQL.git hs
+git clone https://github.com/DeNA/HandlerSocket-Plugin-for-MySQL.git hs
 cd hs
 ./autogen.sh
 cp /usr/src/mysql/mysql-source-5.5.tar.gz .
