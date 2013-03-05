@@ -6,7 +6,7 @@ This library provide API for communicating with HandlerSocket plugin for MySQL.
 
 ## Installation
 
-You just need to get composer and than:
+You just need to get composer and then:
 
         php composer.phar require tz-lom/hsphp --no-update
 
