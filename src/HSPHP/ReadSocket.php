@@ -264,21 +264,32 @@ class ReadSocket implements ReadCommandsInterface
     /**
      * {@inheritdoc}
      */
-    public function select($index, $compare, $keys, $limit = 1, $begin = 0)
+    public function select($index, $compare, $keys, $limit = 1, $begin = 0, $in = array())
     {
+        $ivlen = count($in);
+
         $query = $index . self::SEP . $compare . self::SEP . count($keys);
 
         foreach ($keys as $key) {
             $query .= self::SEP . $this->encodeString((string)$key);
         }
 
-        if ($begin > 0) {
-            $query .= self::SEP . $limit . self::SEP . $begin;
+        if ($begin > 0 || $ivlen > 0) {
+            $query .= self::SEP . (($ivlen > 0) ? $ivlen : $limit) . self::SEP . $begin;
         } else {
             if ($limit > 1) {
                 $query .= self::SEP . $limit;
             }
         }
+
+        if ($ivlen) {
+            $query .= self::SEP . '@' . self::SEP . '0' . self::SEP . $ivlen;
+
+            foreach($in as $value) {
+                $query .= self::SEP . $this->encodeString((string)$value);
+            }
+        }
+
         $this->sendStr($query . self::EOL);
     }
 

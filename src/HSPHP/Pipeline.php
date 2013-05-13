@@ -77,7 +77,7 @@ class Pipeline implements ReadCommandsInterface, WriteCommandsInterface
     /**
      * {@inheritdoc}
      */
-    public function select($index, $compare, $keys, $limit = 1, $begin = 0)
+    public function select($index, $compare, $keys, $limit = 1, $begin = 0, $in = array())
     {
         $this->addToQueue(array('method' => 'select', 'args' => func_get_args()));
     }
