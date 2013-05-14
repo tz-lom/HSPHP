@@ -48,13 +48,16 @@ interface ReadCommandsInterface
     /**
      * Perform select command using compare method for keys
      *
+     * @see https://github.com/DeNA/HandlerSocket-Plugin-for-MySQL/blob/master/docs-en/protocol.en.txt
+     *
      * @param integer $index
-     * @param string  $compare
-     * @param array   $keys
+     * @param string $compare
+     * @param array $keys
      * @param integer $limit
      * @param integer $begin
+     * @param array $in
      *
      * @return void
      */
-    public function select($index, $compare, $keys, $limit = 1, $begin = 0);
+    public function select($index, $compare, $keys, $limit = 1, $begin = 0, $in = array());
 }
