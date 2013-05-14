@@ -20,6 +20,13 @@ You just need to get composer and then:
         $c->select($id, '=', array(42)); // SELECT WITH PRIMARY KEY
         $response = $c->readResponse();
 
+        //SELECT with IN statement
+        $c = new \HSPHP\ReadSocket();
+        $c->connect();
+        $id = $c->getIndexId('data_base_name', 'table_name', '', 'id,name,some,thing,more');
+        $c->select($id, '=', array(0), 0, 0, array(1,42,3));
+        $response = $c->readResponse();
+
 # Update
 
 		$c = new \HSPHP\WriteSocket();
