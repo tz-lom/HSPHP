@@ -47,6 +47,8 @@ interface ReadCommandsInterface
 
     /**
      * Perform select command using compare method for keys
+     * If count($keys) > 1, then used IN statement (after @ separator)
+     *  <indexid> <op> <vlen> <v1> ... <vn> [LIM] [IN] [FILTER ...]
      *
      * @see https://github.com/DeNA/HandlerSocket-Plugin-for-MySQL/blob/master/docs-en/protocol.en.txt
      *
@@ -55,9 +57,8 @@ interface ReadCommandsInterface
      * @param array $keys
      * @param integer $limit
      * @param integer $begin
-     * @param array $in
      *
      * @return void
      */
-    public function select($index, $compare, $keys, $limit = 1, $begin = 0, $in = array());
+    public function select($index, $compare, $keys, $limit = 1, $begin = 0);
 }
