@@ -24,7 +24,7 @@ You just need to get composer and then:
         $c = new \HSPHP\ReadSocket();
         $c->connect();
         $id = $c->getIndexId('data_base_name', 'table_name', '', 'id,name,some,thing,more');
-        $c->select($id, '=', array(0), 0, 0, array(1,42,3));
+        $c->select($id, '=', array(1,42,3));
         $response = $c->readResponse();
 
 # Update
