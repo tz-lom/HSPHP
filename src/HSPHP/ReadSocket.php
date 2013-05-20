@@ -22,6 +22,7 @@ class ReadSocket implements ReadCommandsInterface
 {
     const EOL       = "\n";
     const SEP       = "\t";
+    const SEP_IN    = "@";
     const NULL      = "\0";
     const ESC       = "\1";
     const ESC_SHIFT = 0x40;
@@ -182,6 +183,22 @@ class ReadSocket implements ReadCommandsInterface
     }
 
     /**
+     * Add keys to query string
+     *
+     * @param $keys
+     * @param $query
+     * @return string
+     */
+    public function addKeys($keys, $query)
+    {
+        foreach ($keys as $key) {
+            $query .= self::SEP . $this->encodeString((string)$key);
+        }
+
+        return $query;
+    }
+
+    /**
      * Decode string from server
      *
      * @param string $encoded
@@ -264,30 +281,35 @@ class ReadSocket implements ReadCommandsInterface
     /**
      * {@inheritdoc}
      */
-    public function select($index, $compare, $keys, $limit = 1, $begin = 0, $in = array())
+    public function select($index, $compare, $keys, $limit = 1, $begin = 0)
     {
-        $ivlen = count($in);
+        $ivlen = count($keys);
+        $limit = $ivlen > $limit ? $ivlen : $limit;
 
-        $query = $index . self::SEP . $compare . self::SEP . count($keys);
+        /** @FIXME  <vlen>
+         * <vlen> indicates the length of the trailing parameters <v1> ... <vn>. This
+         * must be smaller than or equal to the number of index columns specified by
+         * the <indexname> parameter of the corresponding 'open_index' request.
+         */
+        $query = $index . self::SEP . $compare . self::SEP .  $this->encodeString('1');
 
-        foreach ($keys as $key) {
-            $query .= self::SEP . $this->encodeString((string)$key);
-        }
-
-        if ($begin > 0 || $ivlen > 0) {
-            $query .= self::SEP . (($ivlen > 0) ? $ivlen : $limit) . self::SEP . $begin;
+        if ($ivlen == 1) {
+            $query = $this->addKeys($keys, $query);
         } else {
-            if ($limit > 1) {
-                $query .= self::SEP . $limit;
-            }
+            $query .= self::SEP . $this->encodeString('0');
         }
 
-        if ($ivlen) {
-            $query .= self::SEP . '@' . self::SEP . '0' . self::SEP . $ivlen;
+        // [LIM] <limit> <offset>
+        if ($begin > 0 || $ivlen > 1) {
+            $query .= self::SEP . ($ivlen > 1 ? $ivlen : $limit) . self::SEP . $begin;
+        } elseif ($limit > 1) {
+            $query .= self::SEP . $limit;
+        }
 
-            foreach($in as $value) {
-                $query .= self::SEP . $this->encodeString((string)$value);
-            }
+        // [IN] @ <icol> <ivlen> <iv1> ... <ivn>
+        if ($ivlen > 1) {
+            $query .= self::SEP . self::SEP_IN . self::SEP . '0' . self::SEP . $ivlen;
+            $query = $this->addKeys($keys, $query);
         }
 
         $this->sendStr($query . self::EOL);
