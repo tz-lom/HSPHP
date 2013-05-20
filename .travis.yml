@@ -8,9 +8,10 @@ env:
 
 before_script:
   - ./travis/install_hs.sh
-  - mysql -e "show processlist;"
-  - mysql -e 'create database IF NOT EXISTS HSPHP_test;'
+  - mysql -e "SHOW PROCESSLIST;"
+  - mysql -e 'CREATE DATABASE IF NOT EXISTS HSPHP_test;'
   - mysql -D HSPHP_test < tests/HSPHP/import.sql
+  - composer self-update
   - composer install
 
 script: phpunit
