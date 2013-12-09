@@ -271,7 +271,7 @@ class ReadSocket implements ReadCommandsInterface
         $query = $index . self::SEP . $compare . self::SEP . count($keys);
 
         foreach ($keys as $key) {
-            $query .= self::SEP . $this->encodeString((string)$key);
+            $query .= self::SEP . $this->encodeString($key === null ? null : (string)$key);
         }
 
         if ($begin > 0 || $ivlen > 0) {
@@ -286,7 +286,7 @@ class ReadSocket implements ReadCommandsInterface
             $query .= self::SEP . '@' . self::SEP . '0' . self::SEP . $ivlen;
 
             foreach($in as $value) {
-                $query .= self::SEP . $this->encodeString((string)$value);
+                $query .= self::SEP . $this->encodeString($key === null ? null : (string)$key);
             }
         }
 
