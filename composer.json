@@ -1,6 +1,6 @@
 {
     "name": "tz-lom/hsphp",
-    "description": "Client library for MySQL Handler socket extension.",
+    "description": "Client library for MySQL HandlerSocket extension.",
     "license": "MIT",
     "authors": [
         {
@@ -9,7 +9,7 @@
         }
     ],
     "keywords": [
-        "mysql","handler socket"
+        "mysql", "mariadb", "handler socket", "HandlerSocket", "nosql"
     ],
     "support": {
         "source": "http://github.com/tz-lom/HSPHP"
