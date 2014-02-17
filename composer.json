@@ -9,7 +9,7 @@
         }
     ],
     "keywords": [
-        "mysql", "mariadb", "handler socket", "HandlerSocket", "nosql"
+        "mysql", "mariadb", "percona", "handler socket", "HandlerSocket", "nosql"
     ],
     "support": {
         "source": "http://github.com/tz-lom/HSPHP"
