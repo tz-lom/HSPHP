@@ -39,25 +39,7 @@ class WriteSocket extends ReadSocket implements WriteCommandsInterface
      */
     public function update($index, $compare, $keys, $values, $limit = 1, $begin = 0, $in = array())
     {
-        $query = $index . self::SEP . $compare . self::SEP . count($keys);
-        foreach ($keys as $key) {
-            $query .= self::SEP . $this->encodeString((string)$key);
-        }
-        $query .= self::SEP . $limit . self::SEP . $begin;
-
-        if ($in) {
-            $query .= self::SEP . '@' . self::SEP . '0' . self::SEP . count($in);
-            foreach($in as $inValue) {
-                $query .= self::SEP . $inValue;
-            }
-        }
-
-        $query .= self::SEP . 'U';
-        foreach ($values as $key) {
-            $query .= self::SEP . $this->encodeString((string)$key);
-        }
-
-        $this->sendStr($query . self::EOL);
+        $this->genericUpdate($index, 'U', $compare, $keys, $values, $limit, $begin, $in);
     }
 
     /**
@@ -91,31 +73,30 @@ class WriteSocket extends ReadSocket implements WriteCommandsInterface
      */
     public function increment($index, $compare, $keys, $values, $limit = 1, $begin = 0, $in = array())
     {
-        $query = $index . self::SEP . $compare . self::SEP . count($keys);
-        foreach ($keys as $key) {
-            $query .= self::SEP . $this->encodeString((string)$key);
-        }
-        $query .= self::SEP . $limit . self::SEP . $begin;
-
-        if ($in) {
-            $query .= self::SEP . '@' . self::SEP . '0' . self::SEP . count($in);
-            foreach($in as $inValue) {
-                $query .= self::SEP . $inValue;
-            }
-        }
-
-        $query .= self::SEP . '+';
-        foreach ($values as $key) {
-            $query .= self::SEP . $this->encodeString((string)$key);
-        }
-
-        $this->sendStr($query . self::EOL);
+        $this->genericUpdate($index, '+', $compare, $keys, $values, $limit, $begin, $in);
     }
 
     /**
      * {@inheritdoc}
      */
     public function decrement($index, $compare, $keys, $values, $limit = 1, $begin = 0, $in = array())
+    {
+        $this->genericUpdate($index, '-', $compare, $keys, $values, $limit, $begin, $in);
+    }
+
+    /**
+     * genericUpdate method (used for updates, increment and decrements)
+     *
+     * @param integer $index
+     * @param staing  $operation
+     * @param string  $compare
+     * @param array   $keys
+     * @param array   $values
+     * @param integer $limit
+     * @param integer $begin
+     * @param array $in
+     */
+    private function genericUpdate($index, $operation, $compare, $keys, $values, $limit = 1, $begin = 0, $in = array())
     {
         $query = $index . self::SEP . $compare . self::SEP . count($keys);
         foreach ($keys as $key) {
@@ -126,11 +107,11 @@ class WriteSocket extends ReadSocket implements WriteCommandsInterface
         if ($in) {
             $query .= self::SEP . '@' . self::SEP . '0' . self::SEP . count($in);
             foreach($in as $inValue) {
-                $query .= self::SEP . $inValue;
+                $query .= self::SEP . $this->encodeString((string)$inValue);
             }
         }
 
-        $query .= self::SEP . '-';
+        $query .= self::SEP . $operation;
         foreach ($values as $key) {
             $query .= self::SEP . $this->encodeString((string)$key);
         }
