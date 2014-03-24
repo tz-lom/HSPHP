@@ -1,3 +1,0 @@
-[submodule "vagrant"]
-	path = vagrant
-	url = git@git.red-sky.pl:shared/vagrant.git
