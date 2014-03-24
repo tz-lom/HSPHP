@@ -29,8 +29,9 @@ interface WriteCommandsInterface
      * @param array   $values
      * @param integer $limit
      * @param integer $begin
+     * @param array $in
      */
-    public function update($index, $compare, $keys, $values, $limit = 1, $begin = 0);
+    public function update($index, $compare, $keys, $values, $limit = 1, $begin = 0, $in = array());
 
     /**
      * Perform delete command using compare method for keys
@@ -54,4 +55,30 @@ interface WriteCommandsInterface
      * @return Boolean
      */
     public function insert($index, $values);
+
+    /**
+     * Modify rows incrementing their values
+     *
+     * @param integer $index
+     * @param string  $compare
+     * @param array   $keys
+     * @param array   $values
+     * @param integer $limit
+     * @param integer $begin
+     * @param array   $in
+     */
+    public function increment($index, $compare, $keys, $values, $limit = 1, $begin = 0, $in = array());
+
+    /**
+     * Modify rows decrementing their values
+     *
+     * @param integer $index
+     * @param string  $compare
+     * @param array   $keys
+     * @param array   $values
+     * @param integer $limit
+     * @param integer $begin
+     * @param array   $in
+     */
+    public function decrement($index, $compare, $keys, $values, $limit = 1, $begin = 0, $in = array());
 }

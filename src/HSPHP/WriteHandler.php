@@ -163,7 +163,7 @@ class WriteHandler extends ReadHandler
      * @param array $values
      *
      * @throws ErrorMessage
-
+     *
      * @return Boolean
      */
     public function insert($values)
