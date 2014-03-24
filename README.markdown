@@ -50,7 +50,7 @@ $response = $c->readResponse(); // Has 1 if OK
 $c = new \HSPHP\WriteSocket();
 $c->connect('localhost',9999);
 $id = $c->getIndexId('data_base_name','table_name','','k,v');
-$c->update($id,'=',array(100500),array(100500,42), 2, 0, array(100501, 100502); // Update rows where k IN (100501, 100502)
+$c->update($id,'=',array(100500),array(100500,42), 2, 0, array(100501, 100502)); // Update rows where k IN (100501, 100502)
 $response = $c->readResponse(); // Has 1 if OK
 ```
 
@@ -84,7 +84,7 @@ $c->increment($id,'=',array(100500),array(2)); // Increment v column by 2
 $response = $c->readResponse(); // Has 1 if OK
 ```
 
-## Increment
+## Decrement
 
 ```php
 $c = new \HSPHP\WriteSocket();
