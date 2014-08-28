@@ -219,6 +219,27 @@ class ReadSocket implements ReadCommandsInterface
     }
 
     /**
+     * Authenticate a connection
+     *
+     * @param string $authkey
+     *
+     * @return ErrorMessage | boolean
+     */
+    public function authenticate($authkey)
+    {
+	$this->sendStr(implode(self::SEP, array('A',
+		$this->encodeString($authkey)
+	   )) . self:: EOL
+	);
+	$ret = $this->readResponse();
+	if (! $ret instanceof ErrorMessage) {
+	    return TRUE;
+	} else {
+	    throw $ret;
+	}
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function openIndex($index, $db, $table, $key, $fields)
