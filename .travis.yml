@@ -8,16 +8,14 @@ php:
   - hhvm
 env:
   - DB=mysql
-  - VERSIONCHECK=""
 
 before_script:
   - ./travis/install_hs.sh
   - mysql -e "SHOW PROCESSLIST;"
   - mysql -e 'CREATE DATABASE IF NOT EXISTS HSPHP_test;'
   - mysql -D HSPHP_test < tests/HSPHP/import.sql
-  - VERSIONCHECK=`php -r 'echo (PHP_MAJOR_VERSION === 5 && PHP_MINOR_VERSION === 3) ? "1" : "";'`
+  - if [[ ${TRAVIS_PHP_VERSION:0:3} == "5.3" ]]; then composer config repositories.packagist composer https://packagist.org; fi;
   - composer self-update
   - composer install
-  - if [[ ! -z $VERSIONCHECK ]]; then composer config repositories.packagist composer https://packagist.org; fi;
 
 script: phpunit
