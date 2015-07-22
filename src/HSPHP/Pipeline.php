@@ -85,7 +85,7 @@ class Pipeline implements ReadCommandsInterface, WriteCommandsInterface
     /**
      * {@inheritdoc}
      */
-    public function update($index, $compare, $keys, $values, $limit = 1, $begin = 0)
+    public function update($index, $compare, $keys, $values, $limit = 1, $begin = 0, $in = array())
     {
         $this->addToQueue(array('method' => 'update', 'args' => func_get_args()));
     }
