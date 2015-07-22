@@ -109,6 +109,22 @@ class Pipeline implements ReadCommandsInterface, WriteCommandsInterface
     /**
      * {@inheritdoc}
      */
+    public function increment($index, $compare, $keys, $values, $limit = 1, $begin = 0, $in = array())
+    {
+        $this->addToQueue(array('method' => 'increment', 'args' => func_get_args()));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function decrement($index, $compare, $keys, $values, $limit = 1, $begin = 0, $in = array())
+    {
+        $this->addToQueue(array('method' => 'decrement', 'args' => func_get_args()));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function openIndex($index, $db, $table, $key, $fields)
     {
         $this->addToQueue(array('method' => 'openIndex', 'args' => func_get_args()));
