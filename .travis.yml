@@ -8,13 +8,14 @@ php:
   - hhvm
 env:
   - DB=mysql
-  - version_check=`php -r 'echo (PHP_MAJOR_VERSION === 5 && PHP_MINOR_VERSION === 3) ? "1" : "";'`
+  - version_check=""
 
 before_script:
   - ./travis/install_hs.sh
   - mysql -e "SHOW PROCESSLIST;"
   - mysql -e 'CREATE DATABASE IF NOT EXISTS HSPHP_test;'
   - mysql -D HSPHP_test < tests/HSPHP/import.sql
+  - version_check=`php -r 'echo (PHP_MAJOR_VERSION === 5 && PHP_MINOR_VERSION === 3) ? "1" : "";'`
   - composer self-update
   - composer install
   - if [[ ! -z $version_check ]]; then composer config repositories.packagist composer https://packagist.org; fi;
