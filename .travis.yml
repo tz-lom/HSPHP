@@ -8,6 +8,7 @@ php:
   - hhvm
 env:
   - DB=mysql
+  - version_check=`php -r 'echo (PHP_MAJOR_VERSION === 5 && PHP_MINOR_VERSION === 3) ? "1" : "";'`
 
 before_script:
   - ./travis/install_hs.sh
@@ -16,5 +17,6 @@ before_script:
   - mysql -D HSPHP_test < tests/HSPHP/import.sql
   - composer self-update
   - composer install
+  - if [[ ! -z $version_check ]]; then composer config repositories.packagist composer https://packagist.org; fi;
 
 script: phpunit
