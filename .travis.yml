@@ -14,6 +14,7 @@ before_script:
   - mysql -e "SHOW PROCESSLIST;"
   - mysql -e 'CREATE DATABASE IF NOT EXISTS HSPHP_test;'
   - mysql -D HSPHP_test < tests/HSPHP/import.sql
+  - if [[ ${TRAVIS_PHP_VERSION:0:3} == "5.3" ]]; then composer config repositories.packagist composer https://packagist.org; fi;
   - composer self-update
   - composer install
 

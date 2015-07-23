@@ -85,7 +85,7 @@ class Pipeline implements ReadCommandsInterface, WriteCommandsInterface
     /**
      * {@inheritdoc}
      */
-    public function update($index, $compare, $keys, $values, $limit = 1, $begin = 0)
+    public function update($index, $compare, $keys, $values, $limit = 1, $begin = 0, $in = array())
     {
         $this->addToQueue(array('method' => 'update', 'args' => func_get_args()));
     }
@@ -104,6 +104,22 @@ class Pipeline implements ReadCommandsInterface, WriteCommandsInterface
     public function insert($index, $values)
     {
         $this->addToQueue(array('method' => 'insert', 'args' => func_get_args()));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function increment($index, $compare, $keys, $values, $limit = 1, $begin = 0, $in = array())
+    {
+        $this->addToQueue(array('method' => 'increment', 'args' => func_get_args()));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function decrement($index, $compare, $keys, $values, $limit = 1, $begin = 0, $in = array())
+    {
+        $this->addToQueue(array('method' => 'decrement', 'args' => func_get_args()));
     }
 
     /**
